@@ -1,0 +1,259 @@
+--terminal açılışı--
+source /opt/ros/melodic/setup.bash
+source devel/setup.bash
+
+
+
+--ROS kullanırken Workspace oluşturma:--
+ * (proje_ismi)_ws ve (proje_ismi)_ws->src dosyalarını oluştur
+ 	- mkdir (proje_ismi)_ws
+	- (proje_ismi)_ws$ mkdir src
+ * projenin içerisine gir ve catkin oluştur
+ 	-(proje_ismi)_ws$ catkin_make
+ * oluşturduğun projeyi source a ekle
+ 	-(proje_ismi)_ws$ source devel/setup.bash
+ * projeye belirli kütüphane ekleyebiliyoruz
+	-(proje_ismi)_ws/src$ catkin_create_pkg uyg8 std_msgs rospy roscpp (tekrar bir geri gidip catkin_make yapman gerek)
+
+
+
+--ros-bridge--
+roslaunch rosbridge_server rosbridge_websocket.launch
+
+
+
+--nmea_msgs-- hata için
+sudo apt-get install ros-melodic-nmea-msgs
+
+
+
+--autoware_msgs-- hata için
+sudo apt-get install ros-melodic-autoware-msgs
+
+
+
+--araç hareket--
+rostopic pub -r 10 /vehicle_cmd autoware_msgs/VehicleCmd '{twist_cmd:{twist:{linear:{x: 2.0},angular: {z: -0.2}}}}'
+
+link: https://github.com/lgsvl/simulator/issues/717
+açıklama: lgsvl sadece twist mesajını dinliyor olabilir
+
+
+
+--msgs içerik görüntüleme--
+rostopic type /vehicle_cmd
+-> autoware_msgs/VehicleCmd
+
+rosmsg show autoware_msgs/VehicleCmd
+...
+
+
+
+--LGSVL Ros Brigde--
+https://www.lgsvlsimulator.com/docs/autoware-json-example/
+
+
+--rosbag play nasıl çalışır--
+/roscore çalıştır/
+rosparam set /use_sim_time true
+rosbag play isim.bag --clock
+
+
+
+[
+  {
+    "type": "GPS Device",
+    "name": "GPS",
+    "params": {
+      "Frequency": 12.5,
+      "Topic": "/nmea_sentence",
+      "Frame": "gps",
+      "IgnoreMapOrigin": true
+    },
+    "transform": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "pitch": 0,
+      "yaw": 0,
+      "roll": 0
+    }
+  },
+  {
+    "type": "GPS Odometry",
+    "name": "GPS Odometry",
+    "params": {
+      "Frequency": 12.5,
+      "Topic": "/odom",
+      "Frame": "gps",
+      "IgnoreMapOrigin": true
+    },
+    "transform": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "pitch": 0,
+      "yaw": 0,
+      "roll": 0
+    }
+  },
+  {
+    "type": "IMU",
+    "name": "IMU",
+    "params": {
+      "Topic": "/imu_raw",
+      "Frame": "imu"
+    },
+    "transform": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "pitch": 0,
+      "yaw": 0,
+      "roll": 0
+    }
+  },
+{
+    "type": "Color Camera",
+    "name": "Main Camera",
+    "params": {
+      "Width": 1024,
+      "Height": 780,
+      "Frequency": 15,
+      "JpegQuality": 75,
+      "FieldOfView": 50,
+      "MinDistance": 0.1,
+      "MaxDistance": 2000,
+      "Topic": "/simulator/camera_node/image/compressed",
+      "Frame": "camera"
+    },
+    "transform": {
+      "x": 0,
+      "y": 1.7,
+      "z": -0.2,
+      "pitch": 0,
+      "yaw": 0,
+      "roll": 0
+    }
+  },
+{
+    "type": "Lidar",
+    "name": "Lidar",
+    "params": {
+      "LaserCount": 32,
+      "MinDistance": 0.5,
+      "MaxDistance": 100,
+      "RotationFrequency": 10,
+      "MeasurementsPerRotation": 360,
+      "FieldOfView": 41.33,
+      "CenterAngle": 15,
+      "Compensated": true,
+      "PointColor": "#ff000000",
+      "Topic": "/points_raw",
+      "Frame": "velodyne"
+    },
+    "transform": {
+      "x": 0,
+      "y": 3,
+      "z": -0.3679201,
+      "pitch": 0,
+      "yaw": 0,
+      "roll": 0
+    }
+  },{
+    "type": "Depth Camera",
+    "name": "Depth Camera",
+    "params": {
+      "Width": 1920,
+      "Height": 1080,
+      "Frequency": 15,
+      "JpegQuality": 75,
+      "FieldOfView": 50,
+      "MinDistance": 0.1,
+      "MaxDistance": 2000,
+      "Topic": "/simulator/depth_camera"
+    },
+    "transform": {
+      "x": 0,
+      "y": 1.7,
+      "z": -0.2,
+      "pitch": 0,
+      "yaw": 0,
+      "roll": 0
+    }
+},{
+    "type": "3D Ground Truth",
+    "name": "3D Ground Truth",
+    "params": {
+      "Frequency": 10,
+      "Topic": "/simulator/ground_truth/3d_detections"
+    },
+    "transform": {
+      "x": 0,
+      "y": 1.975314,
+      "z": -0.3679201,
+      "pitch": 0,
+      "yaw": 0,
+      "roll": 0
+    }
+},{
+    "type": "3D Ground Truth Visualizer",
+    "name": "3D Ground Truth Visualizer",
+    "params": {
+      "Topic": "/simulator/ground_truth/3d_visualize"
+    },
+    "transform": {
+      "x": 0,
+      "y": 1.975314,
+      "z": -0.3679201,
+      "pitch": 0,
+      "yaw": 0,
+      "roll": 0
+    }
+},{
+    "type": "2D Ground Truth",
+    "name": "2D Ground Truth",
+    "params": {
+      "Frequency": 10,
+      "Topic": "/simulator/ground_truth/2d_detections"
+    },
+    "transform": {
+      "x": 0,
+      "y": 1.7,
+      "z": -0.2,
+      "pitch": 0,
+      "yaw": 0,
+      "roll": 0
+    }
+},{
+    "type": "2D Ground Truth Visualizer",
+    "name": "2D Ground Truth Visualizer",
+    "params": {
+      "Width": 1920,
+      "Height": 1080,
+      "FieldOfView": 50,
+      "MinDistance": 0.1,
+      "MaxDistance": 2000,
+      "Topic": "/simulator/ground_truth/2d_visualize"
+    },
+    "transform": {
+      "x": 0,
+      "y": 1.7,
+      "z": -0.2,
+      "pitch": 0,
+      "yaw": 0,
+      "roll": 0
+    }
+},
+  {
+    "type": "Keyboard Control",
+    "name": "Keyboard Car Control"
+  },
+  {
+    "type": "Vehicle Control",
+    "name": "Autoware Car Control",
+    "params": {
+      "Topic": "/vehicle_cmd"
+    }
+  }
+]
